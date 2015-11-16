@@ -180,7 +180,7 @@ var recordRead = `{
       "dynamicDns":false,
       "failed":false,
       "gtdLocation":"DEFAULT",
-      "ha    rdLink":false,
+      "hardLink":false,
       "ttl":86400
     },
     {
@@ -195,7 +195,7 @@ var recordRead = `{
       "dynamicDns":false,
       "failed":false,
       "gtdLocation":"DEFAULT",
-      "ha    rdLink":false,
+      "hardLink":false,
       "ttl":86400
     }
   ],
