@@ -115,21 +115,31 @@ func (s *S) Test_UpdateRecordMergesChanges(c *C) {
 			fmt.Fprintln(w, recordRead)
 		case "PUT":
 			var actual Record
+
+			expected := Record{
+				Name:         "test-update",
+				RecordID:     10039430,
+				Source:       1,
+				SourceID:     870073,
+				Type:         "CNAME",
+				Value:        "10.10.10.20",
+				Ttl:          int64(1234),
+				MxLevel:      int64(6),
+				Weight:       int64(11),
+				Priority:     int64(16),
+				Port:         int64(8081),
+				Keywords:     "keywords-update",
+				Title:        "title-update",
+				HardLink:     true,
+				RedirectType: "Standard - 301",
+				Description:  "description-update",
+				GtdLocation:  "DEFAULT",
+			}
+
 			decoder := json.NewDecoder(r.Body)
 			decoder.Decode(&actual)
-			c.Assert(actual.Name, Equals, "test-update")
-			c.Assert(actual.Type, Equals, "CNAME")
-			c.Assert(actual.Value, Equals, "10.10.10.20")
-			c.Assert(actual.Ttl, Equals, int64(1234))
-			c.Assert(actual.MxLevel, Equals, int64(6))
-			c.Assert(actual.Weight, Equals, int64(11))
-			c.Assert(actual.Priority, Equals, int64(16))
-			c.Assert(actual.Port, Equals, int64(8081))
-			c.Assert(actual.Keywords, Equals, "keywords-update")
-			c.Assert(actual.Title, Equals, "title-update")
-			c.Assert(actual.HardLink, Equals, true)
-			c.Assert(actual.RedirectType, Equals, "Standard - 301")
-			c.Assert(actual.Description, Equals, "description-update")
+
+			c.Assert(actual, DeepEquals, expected)
 		}
 	}))
 	defer ts.Close()
