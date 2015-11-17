@@ -118,8 +118,18 @@ func (s *S) Test_UpdateRecordMergesChanges(c *C) {
 			decoder := json.NewDecoder(r.Body)
 			decoder.Decode(&actual)
 			c.Assert(actual.Name, Equals, "test-update")
-			c.Assert(actual.Value, Equals, "1.1.1.2")
-			c.Assert(actual.TTL, Equals, int64(1234))
+			c.Assert(actual.Type, Equals, "CNAME")
+			c.Assert(actual.Value, Equals, "10.10.10.20")
+			c.Assert(actual.Ttl, Equals, int64(1234))
+			c.Assert(actual.MxLevel, Equals, int64(6))
+			c.Assert(actual.Weight, Equals, int64(11))
+			c.Assert(actual.Priority, Equals, int64(16))
+			c.Assert(actual.Port, Equals, int64(8081))
+			c.Assert(actual.Keywords, Equals, "keywords-update")
+			c.Assert(actual.Title, Equals, "title-update")
+			c.Assert(actual.HardLink, Equals, true)
+			c.Assert(actual.RedirectType, Equals, "Standard - 301")
+			c.Assert(actual.Description, Equals, "description-update")
 		}
 	}))
 	defer ts.Close()
@@ -128,13 +138,24 @@ func (s *S) Test_UpdateRecordMergesChanges(c *C) {
 	client.URL = ts.URL
 
 	cr := map[string]interface{}{
-		"name": "test-update",
-		"TTL":  int64(1234),
+		"name":         "test-update",
+		"type":         "CNAME",
+		"value":        "10.10.10.20",
+		"ttl":          int64(1234),
+		"mxLevel":      int64(6),
+		"weight":       int64(11),
+		"priority":     int64(16),
+		"port":         int64(8081),
+		"keywords":     "keywords-update",
+		"title":        "title-update",
+		"hardLink":     true,
+		"redirectType": "Standard - 301",
+		"description":  "description-update",
 	}
 
-	recordID, err := client.UpdateRecord("870073", "10039429", cr)
+	recordID, err := client.UpdateRecord("870073", "10039430", cr)
 	c.Assert(err, IsNil)
-	c.Assert(recordID, Equals, "10039429")
+	c.Assert(recordID, Equals, "10039430")
 }
 
 func (s *S) Test_DeleteRecordGood(c *C) {
@@ -197,6 +218,29 @@ var recordRead = `{
       "gtdLocation":"DEFAULT",
       "hardLink":false,
       "ttl":86400
+    },
+    {
+      "name":"test-merge",
+      "value":"1.1.1.3",
+      "id":10039430,
+      "type":"A",
+      "source":1,
+      "failover":false,
+      "monitor":false,
+      "sourceId":870073,
+      "dynamicDns":false,
+      "failed":false,
+      "gtdLocation":"DEFAULT",
+      "hardLink":false,
+      "ttl":86400,
+      "mxLevel": 5,
+      "weight": 10,
+      "priority": 15,
+      "port": 8080,
+      "keywords": "keywords",
+      "title": "title",
+      "redirectType": "Hidden Frame Masked",
+      "description": "description"
     }
   ],
   "page":0,
