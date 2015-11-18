@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/imdario/mergo"
 	"strconv"
 )
 
@@ -24,7 +23,7 @@ type Record struct {
 	SourceID     int64  `json:"sourceId"`
 	DynamicDNS   bool   `json:"dynamicDns"`
 	Password     string `json:"password"`
-	Ttl          int64  `json:"ttl"`
+	TTL          int64  `json:"ttl"`
 	Monitor      bool   `json:"monitor"`
 	Failover     bool   `json:"failover"`
 	Failed       bool   `json:"failed"`
@@ -33,7 +32,7 @@ type Record struct {
 	Keywords     string `json:"keywords"`
 	Title        string `json:"title"`
 	HardLink     bool   `json:"hardLink"`
-	MxLevel      int64  `json:"mxLevel"`
+	MXLevel      int64  `json:"mxLevel"`
 	Weight       int64  `json:"weight"`
 	Priority     int64  `json:"priority"`
 	Port         int64  `json:"port"`
@@ -144,9 +143,44 @@ func (c *Client) UpdateRecord(domainID string, recordID string, cr map[string]in
 		return "", err
 	}
 
-	err = mergo.MapWithOverwrite(current, cr)
-	if err != nil {
-		return "", err
+	if val, ok := cr["name"]; ok {
+		current.Name = val.(string)
+	}
+	if val, ok := cr["type"]; ok {
+		current.Type = val.(string)
+	}
+	if val, ok := cr["value"]; ok {
+		current.Value = val.(string)
+	}
+	if val, ok := cr["ttl"]; ok {
+		current.TTL = val.(int64)
+	}
+	if val, ok := cr["mxLevel"]; ok {
+		current.MXLevel = val.(int64)
+	}
+	if val, ok := cr["weight"]; ok {
+		current.Weight = val.(int64)
+	}
+	if val, ok := cr["priority"]; ok {
+		current.Priority = val.(int64)
+	}
+	if val, ok := cr["port"]; ok {
+		current.Port = val.(int64)
+	}
+	if val, ok := cr["keywords"]; ok {
+		current.Keywords = val.(string)
+	}
+	if val, ok := cr["title"]; ok {
+		current.Title = val.(string)
+	}
+	if val, ok := cr["hardLink"]; ok {
+		current.HardLink = val.(bool)
+	}
+	if val, ok := cr["redirectType"]; ok {
+		current.RedirectType = val.(string)
+	}
+	if val, ok := cr["description"]; ok {
+		current.Description = val.(string)
 	}
 
 	buf := bytes.NewBuffer(nil)
